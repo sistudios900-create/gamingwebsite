@@ -1,0 +1,9 @@
+# Ignore local env and database
+.env
+dev.db
+node_modules
+.next
+
+# Editor
+.vscode
+.idea

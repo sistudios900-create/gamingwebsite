@@ -1,0 +1,16 @@
+/**
+ * Minimal styles to get a clean, modern look
+ */
+
+:root{
+  --bg:#f7f8fa; --card:#fff; --muted:#6b7280; --accent:#1a73e8
+}
+
+html,body,#__next{height:100%}
+body{margin:0;background:var(--bg);color:#111}
+
+a{color:var(--accent);text-decoration:none}
+
+button{background:var(--accent);color:white;border:0;padding:8px 12px;border-radius:6px}
+
+main{max-width:1000px;margin:0 auto}
