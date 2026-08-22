@@ -11,12 +11,14 @@ export default NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // let NextAuth create the JWT session; we upsert the user into DB
       try {
+        // If INITIAL_ADMIN_EMAIL is set and matches this user's email, promote to admin on sign-in
+        const isInitialAdmin = process.env.INITIAL_ADMIN_EMAIL && user.email && (user.email.toLowerCase() === process.env.INITIAL_ADMIN_EMAIL.toLowerCase())
+
         await prisma.user.upsert({
           where: { email: user.email },
-          update: { name: user.name, image: user.image },
-          create: { email: user.email, name: user.name, image: user.image }
+          update: { name: user.name, image: user.image, isAdmin: isInitialAdmin ? true : undefined },
+          create: { email: user.email, name: user.name, image: user.image, isAdmin: isInitialAdmin ? true : false }
         })
         return true
       } catch (e) {
@@ -25,7 +27,6 @@ export default NextAuth({
       }
     },
     async session({ session }) {
-      // Append isAdmin flag
       const dbUser = await prisma.user.findUnique({ where: { email: session.user.email } })
       if (dbUser) session.user.isAdmin = dbUser.isAdmin
       return session
